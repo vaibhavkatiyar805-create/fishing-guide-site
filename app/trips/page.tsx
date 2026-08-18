@@ -28,8 +28,9 @@ export default function Trips() {
   return (
     <div>
       {/* Header */}
-      <section className="bg-blue-900 text-white py-16">
-        <div className="max-w-6xl mx-auto px-4">
+      <section className="relative py-24 text-white bg-cover bg-center" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=400&fit=crop)'}}>
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
           <h1 className="text-5xl font-bold mb-4">Our Fishing Trips</h1>
           <p className="text-xl">Curated experiences for anglers of all skill levels</p>
         </div>
