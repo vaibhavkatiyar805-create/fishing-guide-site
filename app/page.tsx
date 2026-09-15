@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react'
 
 export default function Home() {
-  const [activeCard, setActiveCard] = useState(1)
+  const [loading, setLoading] = useState(true)
+  const [activeSlide, setActiveSlide] = useState(0)
   const [activeTab, setActiveTab] = useState<'all' | 'weddings' | 'parties' | 'decor'>('all')
   const [showCookie, setShowCookie] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
@@ -18,16 +19,55 @@ export default function Home() {
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
 
+  // Architectural Slider Showcase Items (Like Charlie Horner Design)
+  const editorialProjects = [
+    {
+      id: '01',
+      title: 'The Royal Mandap Pavillion',
+      location: 'Udaipur, Rajasthan',
+      tag: 'Full Wedding Production',
+      src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&auto=format&fit=crop&q=80',
+    },
+    {
+      id: '02',
+      title: 'Starlit Sangeet & Neon Lounge',
+      location: 'South Delhi Estate',
+      tag: 'Music & Lighting Production',
+      src: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=1000&auto=format&fit=crop&q=80',
+    },
+    {
+      id: '03',
+      title: 'Amber Chandelier Banquet',
+      location: 'Jaipur Palace Lawns',
+      tag: 'Floral & Table Scaping',
+      src: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1000&auto=format&fit=crop&q=80',
+    },
+    {
+      id: '04',
+      title: 'Sunset Beachfront Celebration',
+      location: 'North Goa',
+      tag: 'Destination Soiree',
+      src: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1000&auto=format&fit=crop&q=80',
+    },
+    {
+      id: '05',
+      title: 'Artisanal Cocktail & Toast Bar',
+      location: 'Aerocity, Delhi',
+      tag: 'Cocktail Gala',
+      src: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1000&auto=format&fit=crop&q=80',
+    }
+  ]
+
   useEffect(() => {
+    // Luxury Curtain Entrance Animation Timer
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 1800)
+
     const consent = localStorage.getItem('ttt_cookie_consent')
     if (!consent) setShowCookie(true)
 
-    // Auto rotate the 3D cards every 4 seconds
-    const interval = setInterval(() => {
-      setActiveCard((prev) => (prev + 1) % 3)
-    }, 4000)
-
-    // Intersection Observer for scroll animations
+    // Scroll reveal observer
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -44,7 +84,7 @@ export default function Home() {
     hiddenElements.forEach((el) => observer.observe(el))
 
     return () => {
-      clearInterval(interval)
+      clearTimeout(timer)
       observer.disconnect()
     }
   }, [])
@@ -54,30 +94,13 @@ export default function Home() {
     setShowCookie(false)
   }
 
-  // 3D Showcase Cards like Coffee reel
-  const heroCards = [
-    {
-      id: 0,
-      badge: 'Signature Decor',
-      title: 'Bespoke Floral & Lighting',
-      desc: 'Architectural florals and amber chandelier ambient glow.',
-      img: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 1,
-      badge: 'Grand Weddings',
-      title: 'Mandap & Royal Entries',
-      desc: 'Breathtaking regal setups crafted for high-vibe celebrations.',
-      img: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 2,
-      badge: 'Cocktails & Soirees',
-      title: 'Stylized Bar & Entertainment',
-      desc: 'Curated mixology lounges, artist coordination, and dance floors.',
-      img: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&auto=format&fit=crop&q=80',
-    }
-  ]
+  const prevSlide = () => {
+    setActiveSlide((prev) => (prev === 0 ? editorialProjects.length - 1 : prev - 1))
+  }
+
+  const nextSlide = () => {
+    setActiveSlide((prev) => (prev === editorialProjects.length - 1 ? 0 : prev + 1))
+  }
 
   const marqueePhotos = [
     'https://images.unsplash.com/photo-1519741497674-611481863552?w=500&auto=format&fit=crop&q=80',
@@ -86,46 +109,15 @@ export default function Home() {
     'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=500&auto=format&fit=crop&q=80',
     'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500&auto=format&fit=crop&q=80',
     'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=500&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500&auto=format&fit=crop&q=80',
   ]
 
   const galleryItems = [
-    {
-      id: 1,
-      category: 'decor',
-      title: 'Royal Table Scape & Florals',
-      src: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 2,
-      category: 'weddings',
-      title: 'Grand Wedding Mandap & Entry',
-      src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 3,
-      category: 'parties',
-      title: 'Aesthetic Cocktail & Toast',
-      src: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 4,
-      category: 'parties',
-      title: 'Neon & Starlit Sangeet Night',
-      src: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 5,
-      category: 'weddings',
-      title: 'Intimate Ceremony Moments',
-      src: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 6,
-      category: 'decor',
-      title: 'Bespoke Ambient Lighting',
-      src: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=800&auto=format&fit=crop&q=80',
-    },
+    { id: 1, category: 'decor', title: 'Royal Table Scape', src: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&auto=format&fit=crop&q=80' },
+    { id: 2, category: 'weddings', title: 'Grand Wedding Mandap', src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop&q=80' },
+    { id: 3, category: 'parties', title: 'Cocktail & Toast Soiree', src: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&auto=format&fit=crop&q=80' },
+    { id: 4, category: 'parties', title: 'Starlit Sangeet Stage', src: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&auto=format&fit=crop&q=80' },
+    { id: 5, category: 'weddings', title: 'Intimate Ceremony Moments', src: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&auto=format&fit=crop&q=80' },
+    { id: 6, category: 'decor', title: 'Bespoke Ambient Lighting', src: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=800&auto=format&fit=crop&q=80' },
   ]
 
   const faqs = [
@@ -139,11 +131,11 @@ export default function Home() {
     },
     {
       q: 'Can you work with our selected external vendors?',
-      a: 'Absolutely. While we have our curated network of elite partners (catering, artists, sound), we are completely happy to collaborate with and coordinate any vendor you choose.'
+      a: 'Absolutely. We collaborate effortlessly with your designated artists, caterers, or decorators while keeping the master timeline tight.'
     },
     {
       q: 'How do we get started?',
-      a: 'Simply drop your details in the inquiry form below or hit the WhatsApp button. Our planning director will schedule a 1-on-1 vision call within 24 hours.'
+      a: 'Simply share your event details in the booking form below or click the WhatsApp button. Our planning director connects within 24 hours.'
     }
   ]
 
@@ -158,137 +150,126 @@ export default function Home() {
     setIsSubmitted(true)
   }
 
-  // Get style for 3D Arc display
-  const getCardStyle = (index: number) => {
-    const diff = (index - activeCard + 3) % 3
-    if (diff === 0) {
-      // Center card: active, front, fully scaled
-      return 'translate-x-0 scale-105 z-20 opacity-100 rotate-0 shadow-[0_25px_50px_rgba(233,162,163,0.35)] border-[#e9a2a3]'
-    } else if (diff === 1) {
-      // Right card: angled back, smaller
-      return 'translate-x-24 sm:translate-x-44 md:translate-x-56 scale-90 z-10 opacity-70 rotate-6 shadow-xl border-[#e9a2a3]/30 pointer-events-auto'
-    } else {
-      // Left card: angled back, smaller
-      return '-translate-x-24 sm:-translate-x-44 md:-translate-x-56 scale-90 z-10 opacity-70 -rotate-6 shadow-xl border-[#e9a2a3]/30 pointer-events-auto'
-    }
-  }
+  const current = editorialProjects[activeSlide]
 
   return (
     <div className="bg-[#400733] text-white selection:bg-[#e9a2a3] selection:text-[#400733] min-h-screen font-sans scroll-smooth overflow-x-hidden relative">
       
-      {/* Dynamic Animated Ambient Orbs */}
+      {/* 1. LUXURY ENTRANCE CURTAIN (Brand Reveal from Video) */}
+      <div 
+        className={`fixed inset-0 z-50 bg-[#350529] flex flex-col items-center justify-center transition-transform duration-1000 ease-[cubic-bezier(0.77,0,0.175,1)] pointer-events-none ${
+          loading ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
+        <div className="text-center">
+          <div className="w-4 h-4 rounded-full bg-[#e9a2a3] mx-auto mb-5 shadow-[0_0_25px_#e9a2a3] animate-ping"></div>
+          <h2 className="text-3xl sm:text-5xl font-serif tracking-[0.3em] uppercase text-white font-extralight">
+            TASK <span className="text-[#e9a2a3] font-normal">|</span> TOAST
+          </h2>
+          <p className="text-[#e9a2a3] tracking-[0.4em] uppercase text-[10px] mt-4 font-semibold">
+            Luxury Event Curators
+          </p>
+        </div>
+      </div>
+
+      {/* Floating Ambient Glowing Lights */}
       <div className="fixed top-[-100px] left-[-100px] w-[550px] h-[550px] bg-[#e9a2a3]/10 rounded-full blur-[150px] pointer-events-none -z-10 animate-pulse duration-1000"></div>
       <div className="fixed bottom-[-150px] right-[-100px] w-[650px] h-[650px] bg-[#e9a2a3]/10 rounded-full blur-[160px] pointer-events-none -z-10 animate-pulse duration-700"></div>
 
-      {/* Floating Glass Header */}
-      <header className="sticky top-0 z-40 bg-[#400733]/85 backdrop-blur-xl border-b border-[#e9a2a3]/20 transition-all duration-300 shadow-lg">
+      {/* Glass Header */}
+      <header className="sticky top-0 z-40 bg-[#400733]/85 backdrop-blur-xl border-b border-[#e9a2a3]/20 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 group">
-            <span className="w-3.5 h-3.5 rounded-full bg-[#e9a2a3] shadow-[0_0_15px_#e9a2a3] group-hover:scale-125 transition-transform duration-300 animate-ping"></span>
-            <span className="text-xl sm:text-2xl font-black tracking-wider text-[#e9a2a3] uppercase transition-all duration-300 group-hover:tracking-widest">
+            <span className="w-3 h-3 rounded-full bg-[#e9a2a3] shadow-[0_0_12px_#e9a2a3] group-hover:scale-125 transition-transform duration-300"></span>
+            <span className="text-xl sm:text-2xl font-black tracking-widest text-[#e9a2a3] uppercase transition-all duration-300">
               Task to Toast
             </span>
           </a>
-          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold tracking-wide text-rose-100/80">
-            <a href="#showcase" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">Highlights</a>
-            <a href="#about" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">About</a>
-            <a href="#services" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">Services</a>
-            <a href="#process" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">Process</a>
-            <a href="#gallery" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">Portfolio</a>
-            <a href="#faq" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">FAQ</a>
+          <nav className="hidden md:flex items-center gap-8 text-xs uppercase font-bold tracking-widest text-rose-100/80">
+            <a href="#editorial" className="hover:text-[#e9a2a3] transition-colors">Archive</a>
+            <a href="#about" className="hover:text-[#e9a2a3] transition-colors">About</a>
+            <a href="#services" className="hover:text-[#e9a2a3] transition-colors">Services</a>
+            <a href="#gallery" className="hover:text-[#e9a2a3] transition-colors">Portfolio</a>
+            <a href="#faq" className="hover:text-[#e9a2a3] transition-colors">FAQ</a>
           </nav>
           <a 
             href="#contact" 
-            className="relative inline-flex items-center justify-center p-0.5 overflow-hidden rounded-full group shadow-[0_0_15px_rgba(233,162,163,0.3)] hover:shadow-[0_0_25px_rgba(233,162,163,0.6)] transition-shadow duration-300"
+            className="border border-[#e9a2a3] hover:bg-[#e9a2a3] hover:text-[#400733] text-[#e9a2a3] font-bold text-xs uppercase tracking-widest px-6 py-2.5 rounded-full transition-all duration-300"
           >
-            <span className="w-full h-full bg-gradient-to-br from-[#e9a2a3] to-[#801066] absolute"></span>
-            <span className="relative px-6 py-2.5 transition-all ease-out bg-[#400733] rounded-full group-hover:bg-opacity-0 font-bold text-xs uppercase tracking-widest text-[#e9a2a3] group-hover:text-white">
-              Plan Event
-            </span>
+            Plan Event
           </a>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative pt-16 pb-12 text-center px-6 overflow-hidden">
-        <div className="relative max-w-4xl mx-auto z-10">
-          <div className="inline-flex items-center gap-2 py-1.5 px-5 rounded-full bg-[#e9a2a3]/10 text-[#e9a2a3] text-xs font-bold tracking-widest uppercase mb-6 border border-[#e9a2a3]/30 backdrop-blur-md shadow-sm animate-bounce">
-            <span className="w-2 h-2 rounded-full bg-[#e9a2a3]"></span>
-            Premier Luxury Event Curators
-          </div>
-          
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.1] text-white">
-            From First Concept <br />
-            <span className="text-[#e9a2a3] italic font-serif relative inline-block">
-              To Final Toast
-              <span className="absolute bottom-2 left-0 w-full h-[3px] bg-[#e9a2a3]/40 rounded-full"></span>
+      {/* 2. EDITORIAL SLIDER (Identical to Charlie Horner Design in Video) */}
+      <section id="editorial" className="min-h-[88vh] flex flex-col justify-between pt-8 pb-12 px-6 max-w-7xl mx-auto relative">
+        <div className="text-center mb-6">
+          <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-[#e9a2a3]">Curated Portfolio Selection</span>
+        </div>
+
+        {/* Main 3-Column Editorial Stage */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-1 my-auto">
+          {/* Left: Project Title & Subtitle */}
+          <div className="lg:col-span-4 text-center lg:text-left space-y-3">
+            <span className="text-xs uppercase font-bold tracking-widest text-[#e9a2a3]/80 block">
+              {current.tag}
             </span>
-          </h1>
-
-          <p className="mt-6 text-base sm:text-xl text-rose-100/90 max-w-2xl mx-auto font-light leading-relaxed">
-            Curating bespoke weddings, milestone anniversaries, and high-vibe celebrations crafted to absolute perfection.
-          </p>
-
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a 
-              href="#contact" 
-              className="w-full sm:w-auto bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-black text-sm uppercase tracking-wider px-8 py-3.5 rounded-full shadow-[0_0_30px_rgba(233,162,163,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_45px_rgba(233,162,163,0.7)]"
-            >
-              Get Free Consultation
-            </a>
-            <a 
-              href="#gallery" 
-              className="w-full sm:w-auto border border-[#e9a2a3]/40 hover:border-[#e9a2a3] bg-white/5 hover:bg-[#e9a2a3]/10 text-white font-semibold text-sm uppercase tracking-wider px-8 py-3.5 rounded-full transition-all duration-300 backdrop-blur-md hover:-translate-y-0.5"
-            >
-              Explore Portfolio
-            </a>
-          </div>
-        </div>
-
-        {/* 3D Arc Reel Showcase */}
-        <div id="showcase" className="relative max-w-5xl mx-auto mt-16 h-[440px] flex items-center justify-center perspective-[1200px]">
-          <div className="relative w-full h-full flex items-center justify-center">
-            {heroCards.map((card, index) => (
-              <div
-                key={card.id}
-                onClick={() => setActiveCard(index)}
-                className={`absolute w-72 sm:w-80 md:w-96 h-[390px] rounded-3xl overflow-hidden border transition-all duration-700 ease-out cursor-pointer flex flex-col justify-end p-6 bg-[#350529] ${getCardStyle(index)}`}
+            <h1 className="text-3xl sm:text-5xl font-serif text-white font-normal leading-tight transition-all duration-500 key={current.title}">
+              {current.title}
+            </h1>
+            <p className="text-xs tracking-wider uppercase text-rose-200/60 font-medium">
+              {current.location}
+            </p>
+            <div className="pt-4">
+              <a 
+                href="#contact" 
+                className="inline-block text-xs uppercase tracking-widest font-bold text-[#e9a2a3] hover:underline underline-offset-8"
               >
-                <img 
-                  src={card.img} 
-                  alt={card.title} 
-                  className="absolute inset-0 w-full h-full object-cover -z-10 brightness-[0.7] hover:scale-105 transition-transform duration-700" 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#400733] via-[#400733]/50 to-transparent"></div>
-                
-                <div className="relative z-10 text-left">
-                  <span className="inline-block px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-[#e9a2a3] text-[#400733] mb-2 shadow-sm">
-                    {card.badge}
-                  </span>
-                  <h3 className="text-xl font-black text-white leading-tight drop-shadow-md">
-                    {card.title}
-                  </h3>
-                  <p className="text-xs text-rose-100/90 mt-1.5 leading-relaxed line-clamp-2">
-                    {card.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
+                Inquire Production &rarr;
+              </a>
+            </div>
+          </div>
+
+          {/* Center: Featured Editorial Frame */}
+          <div className="lg:col-span-5 flex justify-center">
+            <div className="w-full max-w-md h-[460px] sm:h-[520px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-[#e9a2a3]/30 relative group">
+              <img 
+                src={current.src} 
+                alt={current.title}
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#400733]/60 via-transparent to-transparent"></div>
+            </div>
+          </div>
+
+          {/* Right: Brand Descriptor */}
+          <div className="hidden lg:flex lg:col-span-3 flex-col justify-end text-right space-y-4 pr-4">
+            <p className="text-xs text-rose-100/70 font-light leading-relaxed">
+              Every celebration is designed with architectural balance, bespoke lighting palettes, and seamless minute-to-minute timing.
+            </p>
+            <div className="w-12 h-[1px] bg-[#e9a2a3]/40 ml-auto"></div>
           </div>
         </div>
 
-        {/* Selector Dots for 3D Slider */}
-        <div className="flex justify-center items-center gap-3 mt-4">
-          {heroCards.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActiveCard(i)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                activeCard === i ? 'w-8 bg-[#e9a2a3] shadow-[0_0_10px_#e9a2a3]' : 'w-2.5 bg-[#e9a2a3]/30 hover:bg-[#e9a2a3]/60'
-              }`}
-              aria-label={`Select card ${i + 1}`}
-            />
-          ))}
+        {/* Bottom Pagination & Nav Arrows (Exact Video Style) */}
+        <div className="flex items-center justify-center gap-8 pt-8 border-t border-[#e9a2a3]/10">
+          <button 
+            onClick={prevSlide} 
+            className="text-rose-200/60 hover:text-[#e9a2a3] text-xl font-light transition px-2 py-1"
+            aria-label="Previous Project"
+          >
+            &larr;
+          </button>
+          <div className="text-xs tracking-[0.3em] font-mono text-white/90">
+            {current.id} <span className="text-[#e9a2a3]/50">/</span> 0{editorialProjects.length}
+          </div>
+          <button 
+            onClick={nextSlide} 
+            className="text-rose-200/60 hover:text-[#e9a2a3] text-xl font-light transition px-2 py-1"
+            aria-label="Next Project"
+          >
+            &rarr;
+          </button>
         </div>
       </section>
 
@@ -296,14 +277,14 @@ export default function Home() {
       <section className="py-6 border-y border-[#e9a2a3]/20 bg-[#350529] overflow-hidden whitespace-nowrap relative">
         <div className="inline-flex gap-6 animate-[marquee_25s_linear_infinite] hover:[animation-play-state:paused]">
           {[...marqueePhotos, ...marqueePhotos].map((photo, i) => (
-            <div key={i} className="w-56 h-36 rounded-2xl overflow-hidden shrink-0 border border-[#e9a2a3]/30 shadow-md transform hover:scale-105 transition-transform duration-300">
+            <div key={i} className="w-56 h-36 rounded-2xl overflow-hidden shrink-0 border border-[#e9a2a3]/30 shadow-md">
               <img src={photo} alt="Event highlight" className="w-full h-full object-cover" />
             </div>
           ))}
         </div>
       </section>
 
-      {/* Stats Section with Pop Effects */}
+      {/* Live Stats */}
       <section className="bg-[#350529]/60 border-b border-[#e9a2a3]/20 py-12">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center scroll-reveal opacity-0 translate-y-12 transition-all duration-700">
           {[
@@ -312,8 +293,8 @@ export default function Home() {
             { num: '1,500+', label: 'Happy Guests' },
             { num: '5.0 ★', label: 'Client Reviews' }
           ].map((stat, i) => (
-            <div key={i} className="p-4 rounded-2xl hover:bg-white/5 transition-all duration-300 hover:scale-105 border border-transparent hover:border-[#e9a2a3]/20">
-              <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3] drop-shadow-sm">{stat.num}</p>
+            <div key={i} className="p-4 rounded-2xl hover:bg-white/5 transition-all duration-300">
+              <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3]">{stat.num}</p>
               <p className="text-xs uppercase tracking-widest text-rose-200/70 mt-2">{stat.label}</p>
             </div>
           ))}
@@ -348,44 +329,13 @@ export default function Home() {
           ].map((item, idx) => (
             <div 
               key={idx}
-              className="scroll-reveal opacity-0 translate-y-12 transition-all duration-700 bg-[#4d093d]/50 p-8 rounded-3xl border border-[#e9a2a3]/20 hover:border-[#e9a2a3] hover:shadow-[0_10px_35px_rgba(233,162,163,0.2)] hover:-translate-y-2 duration-300 backdrop-blur-sm group"
+              className="scroll-reveal opacity-0 translate-y-12 transition-all duration-700 bg-[#4d093d]/50 p-8 rounded-3xl border border-[#e9a2a3]/20 hover:border-[#e9a2a3] hover:shadow-[0_10px_35px_rgba(233,162,163,0.2)] hover:-translate-y-2 duration-300 backdrop-blur-sm"
             >
-              <span className="text-4xl font-black text-[#e9a2a3]/80 group-hover:text-[#e9a2a3] transition-colors block mb-4">{item.num}</span>
+              <span className="text-4xl font-black text-[#e9a2a3]/80 block mb-4">{item.num}</span>
               <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
               <p className="text-rose-100/80 text-sm leading-relaxed">{item.desc}</p>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* The 4-Step Animated Process Journey */}
-      <section id="process" className="py-24 bg-[#350529] px-6 border-y border-[#e9a2a3]/20">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-16 scroll-reveal opacity-0 translate-y-12 transition-all duration-700">
-            <span className="text-xs font-bold text-[#e9a2a3] uppercase tracking-widest">How We Work</span>
-            <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">The Toast Journey</h2>
-            <p className="mt-3 text-rose-200/70 text-sm">Four seamless steps from dream to execution</p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-6 relative">
-            {[
-              { step: '01', title: 'Consultation', desc: 'Understanding your style, guest scale, venue choices, and budget.' },
-              { step: '02', title: 'Moodboard & 3D', desc: 'Visualizing themes, florals, stages, and custom ambient lighting.' },
-              { step: '03', title: 'Vendor Sync', desc: 'Locking caterers, sound, artists, and timing into a single itinerary.' },
-              { step: '04', title: 'The Final Toast', desc: 'On-site execution so you can dance, mingle, and celebrate stress-free.' }
-            ].map((p, idx) => (
-              <div 
-                key={idx}
-                className="scroll-reveal opacity-0 translate-y-12 transition-all duration-700 bg-[#400733] p-6 rounded-3xl border border-[#e9a2a3]/20 relative hover:-translate-y-2 hover:border-[#e9a2a3] transition-all duration-300"
-              >
-                <div className="w-12 h-12 rounded-2xl bg-[#e9a2a3]/20 text-[#e9a2a3] flex items-center justify-center font-black text-lg mb-4 border border-[#e9a2a3]/40">
-                  {p.step}
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">{p.title}</h3>
-                <p className="text-xs text-rose-200/80 leading-relaxed">{p.desc}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -421,14 +371,10 @@ export default function Home() {
             ].map((srv, idx) => (
               <div 
                 key={idx}
-                className="scroll-reveal opacity-0 translate-y-12 transition-all duration-700 bg-[#400733] rounded-3xl overflow-hidden border border-[#e9a2a3]/20 hover:border-[#e9a2a3]/60 hover:shadow-[0_15px_40px_rgba(233,162,163,0.25)] hover:-translate-y-2 flex flex-col group duration-500"
+                className="scroll-reveal opacity-0 translate-y-12 transition-all duration-700 bg-[#400733] rounded-3xl overflow-hidden border border-[#e9a2a3]/20 hover:border-[#e9a2a3]/60 hover:shadow-[0_15px_40px_rgba(233,162,163,0.25)] hover:-translate-y-2 flex flex-col duration-500"
               >
                 <div className="h-64 overflow-hidden relative">
-                  <img 
-                    src={srv.img} 
-                    alt={srv.title} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" 
-                  />
+                  <img src={srv.img} alt={srv.title} className="w-full h-full object-cover hover:scale-110 transition duration-700 ease-out" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#400733] via-transparent to-transparent opacity-80"></div>
                   <span className="absolute top-4 right-4 bg-[#400733]/90 backdrop-blur-md text-[#e9a2a3] font-bold text-xs px-3 py-1.5 rounded-full border border-[#e9a2a3]/40">
                     {srv.tag}
@@ -439,7 +385,7 @@ export default function Home() {
                     <h3 className="text-2xl font-bold text-white mb-2">{srv.title}</h3>
                     <p className="text-rose-100/80 text-sm leading-relaxed mb-6">{srv.desc}</p>
                   </div>
-                  <a href="#contact" className="text-[#e9a2a3] font-bold text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                  <a href="#contact" className="text-[#e9a2a3] font-bold text-sm inline-flex items-center gap-2">
                     Inquire Package <span>&rarr;</span>
                   </a>
                 </div>
@@ -449,12 +395,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Portfolio Gallery with Filter Tabs */}
+      {/* Portfolio Gallery */}
       <section id="gallery" className="py-28 px-6 max-w-6xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-14 scroll-reveal opacity-0 translate-y-12 transition-all duration-700">
           <span className="text-xs font-bold text-[#e9a2a3] uppercase tracking-widest">Visual Portfolio</span>
           <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Moments from the Archive</h2>
-          <p className="mt-4 text-rose-200/70 text-base">Unfiltered glimpses of the toasts we have crafted</p>
           
           <div className="flex flex-wrap justify-center gap-2 mt-8">
             {(['all', 'weddings', 'parties', 'decor'] as const).map((tab) => (
@@ -475,26 +420,17 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredGallery.map((item) => (
-            <div 
-              key={item.id} 
-              className="relative h-80 rounded-3xl overflow-hidden group bg-[#350529] border border-[#e9a2a3]/20 shadow-lg cursor-pointer transform hover:-translate-y-1 transition-all duration-300"
-            >
-              <img 
-                src={item.src} 
-                alt={item.title} 
-                className="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" 
-              />
+            <div key={item.id} className="relative h-80 rounded-3xl overflow-hidden group bg-[#350529] border border-[#e9a2a3]/20 shadow-lg cursor-pointer">
+              <img src={item.src} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#400733] via-[#400733]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                <p className="text-base font-bold text-[#e9a2a3] transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                  {item.title}
-                </p>
+                <p className="text-base font-bold text-[#e9a2a3]">{item.title}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Animated FAQ Section */}
+      {/* FAQ Section */}
       <section id="faq" className="py-24 bg-[#350529] px-6 border-t border-[#e9a2a3]/20">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12 scroll-reveal opacity-0 translate-y-12 transition-all duration-700">
@@ -504,10 +440,7 @@ export default function Home() {
 
           <div className="space-y-4">
             {faqs.map((faq, idx) => (
-              <div 
-                key={idx} 
-                className="bg-[#400733] rounded-2xl border border-[#e9a2a3]/20 overflow-hidden transition-all duration-300"
-              >
+              <div key={idx} className="bg-[#400733] rounded-2xl border border-[#e9a2a3]/20 overflow-hidden">
                 <button 
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                   className="w-full px-6 py-5 text-left flex items-center justify-between font-bold text-sm text-white hover:text-[#e9a2a3] transition"
@@ -622,17 +555,6 @@ export default function Home() {
               </p>
             )}
           </form>
-
-          <div className="mt-12 text-center">
-            <a 
-              href="https://www.instagram.com/task.to.toast.events/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-bold text-[#e9a2a3] hover:underline"
-            >
-              Follow Our Daily Stories on Instagram @task.to.toast.events &rarr;
-            </a>
-          </div>
         </div>
       </section>
 
