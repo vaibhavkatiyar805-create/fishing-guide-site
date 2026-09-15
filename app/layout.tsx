@@ -19,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <script src="https://cdn.tailwindcss.com"></script>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-DKNHWKK40E"
           strategy="afterInteractive"
@@ -35,9 +36,8 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={inter.className}>
-        <Navigation />
-        {children}
-      </body>
+          {children}
+        </body>
     </html>
   )
 }
