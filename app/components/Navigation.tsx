@@ -10,7 +10,7 @@ export default function Navigation() {
     <nav className="bg-black text-white sticky top-0 z-50 shadow-lg">
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/" className="text-2xl font-bold">
-          Fishing Guide
+          Task to Toast Events
         </Link>
 
         <button

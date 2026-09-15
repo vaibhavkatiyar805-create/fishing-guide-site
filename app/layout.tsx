@@ -4,8 +4,8 @@ import Navigation from './components/Navigation'
 import Footer from './components/Footer'
 
 export const metadata: Metadata = {
-  title: 'Professional Fishing Guide',
-  description: 'Expert fishing guide services',
+  title: 'Task to Toast Events',
+  description: 'Task to Toast Events',
 }
 
 export default function RootLayout({
