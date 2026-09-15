@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 
 export default function Home() {
+  const [activeCard, setActiveCard] = useState(1)
   const [activeTab, setActiveTab] = useState<'all' | 'weddings' | 'parties' | 'decor'>('all')
   const [showCookie, setShowCookie] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
@@ -21,6 +22,12 @@ export default function Home() {
     const consent = localStorage.getItem('ttt_cookie_consent')
     if (!consent) setShowCookie(true)
 
+    // Auto rotate the 3D cards every 4 seconds
+    const interval = setInterval(() => {
+      setActiveCard((prev) => (prev + 1) % 3)
+    }, 4000)
+
+    // Intersection Observer for scroll animations
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -36,13 +43,41 @@ export default function Home() {
     const hiddenElements = document.querySelectorAll('.scroll-reveal')
     hiddenElements.forEach((el) => observer.observe(el))
 
-    return () => observer.disconnect()
+    return () => {
+      clearInterval(interval)
+      observer.disconnect()
+    }
   }, [])
 
   const acceptCookies = () => {
     localStorage.setItem('ttt_cookie_consent', 'accepted')
     setShowCookie(false)
   }
+
+  // 3D Showcase Cards like Coffee reel
+  const heroCards = [
+    {
+      id: 0,
+      badge: 'Signature Decor',
+      title: 'Bespoke Floral & Lighting',
+      desc: 'Architectural florals and amber chandelier ambient glow.',
+      img: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&auto=format&fit=crop&q=80',
+    },
+    {
+      id: 1,
+      badge: 'Grand Weddings',
+      title: 'Mandap & Royal Entries',
+      desc: 'Breathtaking regal setups crafted for high-vibe celebrations.',
+      img: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop&q=80',
+    },
+    {
+      id: 2,
+      badge: 'Cocktails & Soirees',
+      title: 'Stylized Bar & Entertainment',
+      desc: 'Curated mixology lounges, artist coordination, and dance floors.',
+      img: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&auto=format&fit=crop&q=80',
+    }
+  ]
 
   const marqueePhotos = [
     'https://images.unsplash.com/photo-1519741497674-611481863552?w=500&auto=format&fit=crop&q=80',
@@ -123,6 +158,21 @@ export default function Home() {
     setIsSubmitted(true)
   }
 
+  // Get style for 3D Arc display
+  const getCardStyle = (index: number) => {
+    const diff = (index - activeCard + 3) % 3
+    if (diff === 0) {
+      // Center card: active, front, fully scaled
+      return 'translate-x-0 scale-105 z-20 opacity-100 rotate-0 shadow-[0_25px_50px_rgba(233,162,163,0.35)] border-[#e9a2a3]'
+    } else if (diff === 1) {
+      // Right card: angled back, smaller
+      return 'translate-x-24 sm:translate-x-44 md:translate-x-56 scale-90 z-10 opacity-70 rotate-6 shadow-xl border-[#e9a2a3]/30 pointer-events-auto'
+    } else {
+      // Left card: angled back, smaller
+      return '-translate-x-24 sm:-translate-x-44 md:-translate-x-56 scale-90 z-10 opacity-70 -rotate-6 shadow-xl border-[#e9a2a3]/30 pointer-events-auto'
+    }
+  }
+
   return (
     <div className="bg-[#400733] text-white selection:bg-[#e9a2a3] selection:text-[#400733] min-h-screen font-sans scroll-smooth overflow-x-hidden relative">
       
@@ -140,6 +190,7 @@ export default function Home() {
             </span>
           </a>
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold tracking-wide text-rose-100/80">
+            <a href="#showcase" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">Highlights</a>
             <a href="#about" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">About</a>
             <a href="#services" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">Services</a>
             <a href="#process" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">Process</a>
@@ -158,16 +209,10 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section with Floating Elements */}
-      <section className="relative min-h-[92vh] flex items-center justify-center text-center px-6 overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20 scale-105 animate-[pulse_8s_ease-in-out_infinite]"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1600&auto=format&fit=crop&q=80')" }}
-        ></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#400733]/90 via-[#400733]/70 to-[#400733]"></div>
-
-        <div className="relative max-w-4xl mx-auto py-24 z-10">
-          <div className="inline-flex items-center gap-2 py-1.5 px-5 rounded-full bg-[#e9a2a3]/10 text-[#e9a2a3] text-xs font-bold tracking-widest uppercase mb-8 border border-[#e9a2a3]/30 backdrop-blur-md shadow-sm animate-bounce">
+      {/* Hero Section */}
+      <section className="relative pt-16 pb-12 text-center px-6 overflow-hidden">
+        <div className="relative max-w-4xl mx-auto z-10">
+          <div className="inline-flex items-center gap-2 py-1.5 px-5 rounded-full bg-[#e9a2a3]/10 text-[#e9a2a3] text-xs font-bold tracking-widest uppercase mb-6 border border-[#e9a2a3]/30 backdrop-blur-md shadow-sm animate-bounce">
             <span className="w-2 h-2 rounded-full bg-[#e9a2a3]"></span>
             Premier Luxury Event Curators
           </div>
@@ -180,24 +225,70 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="mt-8 text-lg sm:text-xl text-rose-100/90 max-w-2xl mx-auto font-light leading-relaxed">
+          <p className="mt-6 text-base sm:text-xl text-rose-100/90 max-w-2xl mx-auto font-light leading-relaxed">
             Curating bespoke weddings, milestone anniversaries, and high-vibe celebrations crafted to absolute perfection.
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a 
               href="#contact" 
-              className="w-full sm:w-auto bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-black text-sm uppercase tracking-wider px-9 py-4 rounded-full shadow-[0_0_30px_rgba(233,162,163,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_45px_rgba(233,162,163,0.7)]"
+              className="w-full sm:w-auto bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-black text-sm uppercase tracking-wider px-8 py-3.5 rounded-full shadow-[0_0_30px_rgba(233,162,163,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_45px_rgba(233,162,163,0.7)]"
             >
               Get Free Consultation
             </a>
             <a 
               href="#gallery" 
-              className="w-full sm:w-auto border border-[#e9a2a3]/40 hover:border-[#e9a2a3] bg-white/5 hover:bg-[#e9a2a3]/10 text-white font-semibold text-sm uppercase tracking-wider px-9 py-4 rounded-full transition-all duration-300 backdrop-blur-md hover:-translate-y-0.5"
+              className="w-full sm:w-auto border border-[#e9a2a3]/40 hover:border-[#e9a2a3] bg-white/5 hover:bg-[#e9a2a3]/10 text-white font-semibold text-sm uppercase tracking-wider px-8 py-3.5 rounded-full transition-all duration-300 backdrop-blur-md hover:-translate-y-0.5"
             >
               Explore Portfolio
             </a>
           </div>
+        </div>
+
+        {/* 3D Arc Reel Showcase */}
+        <div id="showcase" className="relative max-w-5xl mx-auto mt-16 h-[440px] flex items-center justify-center perspective-[1200px]">
+          <div className="relative w-full h-full flex items-center justify-center">
+            {heroCards.map((card, index) => (
+              <div
+                key={card.id}
+                onClick={() => setActiveCard(index)}
+                className={`absolute w-72 sm:w-80 md:w-96 h-[390px] rounded-3xl overflow-hidden border transition-all duration-700 ease-out cursor-pointer flex flex-col justify-end p-6 bg-[#350529] ${getCardStyle(index)}`}
+              >
+                <img 
+                  src={card.img} 
+                  alt={card.title} 
+                  className="absolute inset-0 w-full h-full object-cover -z-10 brightness-[0.7] hover:scale-105 transition-transform duration-700" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#400733] via-[#400733]/50 to-transparent"></div>
+                
+                <div className="relative z-10 text-left">
+                  <span className="inline-block px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-[#e9a2a3] text-[#400733] mb-2 shadow-sm">
+                    {card.badge}
+                  </span>
+                  <h3 className="text-xl font-black text-white leading-tight drop-shadow-md">
+                    {card.title}
+                  </h3>
+                  <p className="text-xs text-rose-100/90 mt-1.5 leading-relaxed line-clamp-2">
+                    {card.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Selector Dots for 3D Slider */}
+        <div className="flex justify-center items-center gap-3 mt-4">
+          {heroCards.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveCard(i)}
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                activeCard === i ? 'w-8 bg-[#e9a2a3] shadow-[0_0_10px_#e9a2a3]' : 'w-2.5 bg-[#e9a2a3]/30 hover:bg-[#e9a2a3]/60'
+              }`}
+              aria-label={`Select card ${i + 1}`}
+            />
+          ))}
         </div>
       </section>
 
@@ -427,7 +518,7 @@ export default function Home() {
                   </span>
                 </button>
                 {openFaq === idx && (
-                  <div className="px-6 pb-5 text-xs text-rose-100/80 leading-relaxed animate-fadeIn">
+                  <div className="px-6 pb-5 text-xs text-rose-100/80 leading-relaxed">
                     {faq.a}
                   </div>
                 )}
