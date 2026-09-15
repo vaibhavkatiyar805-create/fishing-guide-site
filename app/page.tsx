@@ -5,6 +5,8 @@ import React, { useState, useEffect } from 'react'
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'all' | 'weddings' | 'parties' | 'decor'>('all')
   const [showCookie, setShowCookie] = useState(false)
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
+  
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -19,13 +21,12 @@ export default function Home() {
     const consent = localStorage.getItem('ttt_cookie_consent')
     if (!consent) setShowCookie(true)
 
-    // Intersection Observer for scroll animations
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('opacity-100', 'translate-y-0')
-            entry.target.classList.remove('opacity-0', 'translate-y-10')
+            entry.target.classList.remove('opacity-0', 'translate-y-12')
           }
         })
       },
@@ -92,6 +93,25 @@ export default function Home() {
     },
   ]
 
+  const faqs = [
+    {
+      q: 'How far in advance should we book Task to Toast?',
+      a: 'For grand weddings and large celebrations, we recommend booking 3 to 6 months in advance. For private milestone birthdays and cocktail soirees, 3 to 4 weeks is usually ideal.'
+    },
+    {
+      q: 'Do you manage destination events across India?',
+      a: 'Yes! From palace celebrations in Rajasthan to beachfront weddings in Goa, our production and logistics team travels pan-India.'
+    },
+    {
+      q: 'Can you work with our selected external vendors?',
+      a: 'Absolutely. While we have our curated network of elite partners (catering, artists, sound), we are completely happy to collaborate with and coordinate any vendor you choose.'
+    },
+    {
+      q: 'How do we get started?',
+      a: 'Simply drop your details in the inquiry form below or hit the WhatsApp button. Our planning director will schedule a 1-on-1 vision call within 24 hours.'
+    }
+  ]
+
   const filteredGallery = activeTab === 'all' 
     ? galleryItems 
     : galleryItems.filter(item => item.category === activeTab)
@@ -106,28 +126,29 @@ export default function Home() {
   return (
     <div className="bg-[#400733] text-white selection:bg-[#e9a2a3] selection:text-[#400733] min-h-screen font-sans scroll-smooth overflow-x-hidden relative">
       
-      {/* Background Radial Glow Blobs */}
-      <div className="fixed top-[-100px] left-[-100px] w-[500px] h-[500px] bg-[#e9a2a3]/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse"></div>
-      <div className="fixed bottom-[-150px] right-[-100px] w-[600px] h-[600px] bg-[#e9a2a3]/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+      {/* Dynamic Animated Ambient Orbs */}
+      <div className="fixed top-[-100px] left-[-100px] w-[550px] h-[550px] bg-[#e9a2a3]/10 rounded-full blur-[150px] pointer-events-none -z-10 animate-pulse duration-1000"></div>
+      <div className="fixed bottom-[-150px] right-[-100px] w-[650px] h-[650px] bg-[#e9a2a3]/10 rounded-full blur-[160px] pointer-events-none -z-10 animate-pulse duration-700"></div>
 
       {/* Floating Glass Header */}
-      <header className="sticky top-0 z-40 bg-[#400733]/85 backdrop-blur-xl border-b border-[#e9a2a3]/20 transition-all duration-300">
+      <header className="sticky top-0 z-40 bg-[#400733]/85 backdrop-blur-xl border-b border-[#e9a2a3]/20 transition-all duration-300 shadow-lg">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 group">
-            <span className="w-3.5 h-3.5 rounded-full bg-[#e9a2a3] shadow-[0_0_15px_#e9a2a3] group-hover:scale-125 transition-transform duration-300"></span>
+            <span className="w-3.5 h-3.5 rounded-full bg-[#e9a2a3] shadow-[0_0_15px_#e9a2a3] group-hover:scale-125 transition-transform duration-300 animate-ping"></span>
             <span className="text-xl sm:text-2xl font-black tracking-wider text-[#e9a2a3] uppercase transition-all duration-300 group-hover:tracking-widest">
               Task to Toast
             </span>
           </a>
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold tracking-wide text-rose-100/80">
-            <a href="#about" className="hover:text-[#e9a2a3] transition-colors duration-200">About</a>
-            <a href="#services" className="hover:text-[#e9a2a3] transition-colors duration-200">Services</a>
-            <a href="#gallery" className="hover:text-[#e9a2a3] transition-colors duration-200">Portfolio</a>
-            <a href="#contact" className="hover:text-[#e9a2a3] transition-colors duration-200">Inquire</a>
+            <a href="#about" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">About</a>
+            <a href="#services" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">Services</a>
+            <a href="#process" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">Process</a>
+            <a href="#gallery" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">Portfolio</a>
+            <a href="#faq" className="hover:text-[#e9a2a3] transition-colors duration-200 hover:-translate-y-0.5 inline-block">FAQ</a>
           </nav>
           <a 
             href="#contact" 
-            className="relative inline-flex items-center justify-center p-0.5 overflow-hidden rounded-full group"
+            className="relative inline-flex items-center justify-center p-0.5 overflow-hidden rounded-full group shadow-[0_0_15px_rgba(233,162,163,0.3)] hover:shadow-[0_0_25px_rgba(233,162,163,0.6)] transition-shadow duration-300"
           >
             <span className="w-full h-full bg-gradient-to-br from-[#e9a2a3] to-[#801066] absolute"></span>
             <span className="relative px-6 py-2.5 transition-all ease-out bg-[#400733] rounded-full group-hover:bg-opacity-0 font-bold text-xs uppercase tracking-widest text-[#e9a2a3] group-hover:text-white">
@@ -137,7 +158,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section with Floating Elements */}
       <section className="relative min-h-[92vh] flex items-center justify-center text-center px-6 overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-20 scale-105 animate-[pulse_8s_ease-in-out_infinite]"
@@ -146,8 +167,8 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#400733]/90 via-[#400733]/70 to-[#400733]"></div>
 
         <div className="relative max-w-4xl mx-auto py-24 z-10">
-          <div className="inline-flex items-center gap-2 py-1.5 px-5 rounded-full bg-[#e9a2a3]/10 text-[#e9a2a3] text-xs font-bold tracking-widest uppercase mb-8 border border-[#e9a2a3]/30 backdrop-blur-md shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-[#e9a2a3] animate-ping"></span>
+          <div className="inline-flex items-center gap-2 py-1.5 px-5 rounded-full bg-[#e9a2a3]/10 text-[#e9a2a3] text-xs font-bold tracking-widest uppercase mb-8 border border-[#e9a2a3]/30 backdrop-blur-md shadow-sm animate-bounce">
+            <span className="w-2 h-2 rounded-full bg-[#e9a2a3]"></span>
             Premier Luxury Event Curators
           </div>
           
@@ -166,7 +187,7 @@ export default function Home() {
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
             <a 
               href="#contact" 
-              className="w-full sm:w-auto bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-black text-sm uppercase tracking-wider px-9 py-4 rounded-full shadow-[0_0_30px_rgba(233,162,163,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(233,162,163,0.6)]"
+              className="w-full sm:w-auto bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-black text-sm uppercase tracking-wider px-9 py-4 rounded-full shadow-[0_0_30px_rgba(233,162,163,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_45px_rgba(233,162,163,0.7)]"
             >
               Get Free Consultation
             </a>
@@ -184,38 +205,33 @@ export default function Home() {
       <section className="py-6 border-y border-[#e9a2a3]/20 bg-[#350529] overflow-hidden whitespace-nowrap relative">
         <div className="inline-flex gap-6 animate-[marquee_25s_linear_infinite] hover:[animation-play-state:paused]">
           {[...marqueePhotos, ...marqueePhotos].map((photo, i) => (
-            <div key={i} className="w-56 h-36 rounded-2xl overflow-hidden shrink-0 border border-[#e9a2a3]/30 shadow-md">
-              <img src={photo} alt="Event highlight" className="w-full h-full object-cover hover:scale-110 transition duration-500" />
+            <div key={i} className="w-56 h-36 rounded-2xl overflow-hidden shrink-0 border border-[#e9a2a3]/30 shadow-md transform hover:scale-105 transition-transform duration-300">
+              <img src={photo} alt="Event highlight" className="w-full h-full object-cover" />
             </div>
           ))}
         </div>
       </section>
 
-      {/* Live Stats Bar */}
+      {/* Stats Section with Pop Effects */}
       <section className="bg-[#350529]/60 border-b border-[#e9a2a3]/20 py-12">
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center scroll-reveal opacity-0 translate-y-10 transition-all duration-700">
-          <div className="p-4 rounded-2xl hover:bg-white/5 transition duration-300">
-            <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3]">50+</p>
-            <p className="text-xs uppercase tracking-widest text-rose-200/70 mt-2">Events Curated</p>
-          </div>
-          <div className="p-4 rounded-2xl hover:bg-white/5 transition duration-300">
-            <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3]">100%</p>
-            <p className="text-xs uppercase tracking-widest text-rose-200/70 mt-2">On-Time Execution</p>
-          </div>
-          <div className="p-4 rounded-2xl hover:bg-white/5 transition duration-300">
-            <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3]">1,500+</p>
-            <p className="text-xs uppercase tracking-widest text-rose-200/70 mt-2">Happy Guests</p>
-          </div>
-          <div className="p-4 rounded-2xl hover:bg-white/5 transition duration-300">
-            <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3]">5.0 ★</p>
-            <p className="text-xs uppercase tracking-widest text-rose-200/70 mt-2">Client Reviews</p>
-          </div>
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center scroll-reveal opacity-0 translate-y-12 transition-all duration-700">
+          {[
+            { num: '50+', label: 'Events Curated' },
+            { num: '100%', label: 'On-Time Execution' },
+            { num: '1,500+', label: 'Happy Guests' },
+            { num: '5.0 ★', label: 'Client Reviews' }
+          ].map((stat, i) => (
+            <div key={i} className="p-4 rounded-2xl hover:bg-white/5 transition-all duration-300 hover:scale-105 border border-transparent hover:border-[#e9a2a3]/20">
+              <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3] drop-shadow-sm">{stat.num}</p>
+              <p className="text-xs uppercase tracking-widest text-rose-200/70 mt-2">{stat.label}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* Why Choose Us */}
       <section id="about" className="py-28 px-6 max-w-6xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-16 scroll-reveal opacity-0 translate-y-10 transition-all duration-700">
+        <div className="text-center max-w-2xl mx-auto mb-16 scroll-reveal opacity-0 translate-y-12 transition-all duration-700">
           <span className="text-xs font-bold text-[#e9a2a3] uppercase tracking-widest">Why Task to Toast</span>
           <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Your Vision. Flawless Reality.</h2>
           <p className="mt-4 text-rose-200/70 text-base">You enjoy the spotlight; we run the entire stage behind the scenes.</p>
@@ -241,7 +257,7 @@ export default function Home() {
           ].map((item, idx) => (
             <div 
               key={idx}
-              className="scroll-reveal opacity-0 translate-y-10 transition-all duration-700 bg-[#4d093d]/50 p-8 rounded-3xl border border-[#e9a2a3]/20 hover:border-[#e9a2a3] hover:shadow-[0_10px_35px_rgba(233,162,163,0.15)] hover:-translate-y-2 duration-300 backdrop-blur-sm group"
+              className="scroll-reveal opacity-0 translate-y-12 transition-all duration-700 bg-[#4d093d]/50 p-8 rounded-3xl border border-[#e9a2a3]/20 hover:border-[#e9a2a3] hover:shadow-[0_10px_35px_rgba(233,162,163,0.2)] hover:-translate-y-2 duration-300 backdrop-blur-sm group"
             >
               <span className="text-4xl font-black text-[#e9a2a3]/80 group-hover:text-[#e9a2a3] transition-colors block mb-4">{item.num}</span>
               <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
@@ -251,10 +267,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="py-28 bg-[#37062c] px-6 border-y border-[#e9a2a3]/20 relative">
+      {/* The 4-Step Animated Process Journey */}
+      <section id="process" className="py-24 bg-[#350529] px-6 border-y border-[#e9a2a3]/20">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-16 scroll-reveal opacity-0 translate-y-10 transition-all duration-700">
+          <div className="text-center max-w-2xl mx-auto mb-16 scroll-reveal opacity-0 translate-y-12 transition-all duration-700">
+            <span className="text-xs font-bold text-[#e9a2a3] uppercase tracking-widest">How We Work</span>
+            <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">The Toast Journey</h2>
+            <p className="mt-3 text-rose-200/70 text-sm">Four seamless steps from dream to execution</p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-6 relative">
+            {[
+              { step: '01', title: 'Consultation', desc: 'Understanding your style, guest scale, venue choices, and budget.' },
+              { step: '02', title: 'Moodboard & 3D', desc: 'Visualizing themes, florals, stages, and custom ambient lighting.' },
+              { step: '03', title: 'Vendor Sync', desc: 'Locking caterers, sound, artists, and timing into a single itinerary.' },
+              { step: '04', title: 'The Final Toast', desc: 'On-site execution so you can dance, mingle, and celebrate stress-free.' }
+            ].map((p, idx) => (
+              <div 
+                key={idx}
+                className="scroll-reveal opacity-0 translate-y-12 transition-all duration-700 bg-[#400733] p-6 rounded-3xl border border-[#e9a2a3]/20 relative hover:-translate-y-2 hover:border-[#e9a2a3] transition-all duration-300"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-[#e9a2a3]/20 text-[#e9a2a3] flex items-center justify-center font-black text-lg mb-4 border border-[#e9a2a3]/40">
+                  {p.step}
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">{p.title}</h3>
+                <p className="text-xs text-rose-200/80 leading-relaxed">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section id="services" className="py-28 bg-[#37062c] px-6 relative">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-16 scroll-reveal opacity-0 translate-y-12 transition-all duration-700">
             <span className="text-xs font-bold text-[#e9a2a3] uppercase tracking-widest">Our Expertise</span>
             <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Curated Productions</h2>
             <p className="mt-4 text-rose-200/70 text-base">Comprehensive event curation tailored to any scale</p>
@@ -283,7 +330,7 @@ export default function Home() {
             ].map((srv, idx) => (
               <div 
                 key={idx}
-                className="scroll-reveal opacity-0 translate-y-10 transition-all duration-700 bg-[#400733] rounded-3xl overflow-hidden border border-[#e9a2a3]/20 hover:border-[#e9a2a3]/60 hover:shadow-[0_15px_40px_rgba(233,162,163,0.2)] hover:-translate-y-2 flex flex-col group duration-500"
+                className="scroll-reveal opacity-0 translate-y-12 transition-all duration-700 bg-[#400733] rounded-3xl overflow-hidden border border-[#e9a2a3]/20 hover:border-[#e9a2a3]/60 hover:shadow-[0_15px_40px_rgba(233,162,163,0.25)] hover:-translate-y-2 flex flex-col group duration-500"
               >
                 <div className="h-64 overflow-hidden relative">
                   <img 
@@ -313,12 +360,11 @@ export default function Home() {
 
       {/* Portfolio Gallery with Filter Tabs */}
       <section id="gallery" className="py-28 px-6 max-w-6xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-14 scroll-reveal opacity-0 translate-y-10 transition-all duration-700">
+        <div className="text-center max-w-2xl mx-auto mb-14 scroll-reveal opacity-0 translate-y-12 transition-all duration-700">
           <span className="text-xs font-bold text-[#e9a2a3] uppercase tracking-widest">Visual Portfolio</span>
           <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Moments from the Archive</h2>
           <p className="mt-4 text-rose-200/70 text-base">Unfiltered glimpses of the toasts we have crafted</p>
           
-          {/* Tabs */}
           <div className="flex flex-wrap justify-center gap-2 mt-8">
             {(['all', 'weddings', 'parties', 'decor'] as const).map((tab) => (
               <button
@@ -340,7 +386,7 @@ export default function Home() {
           {filteredGallery.map((item) => (
             <div 
               key={item.id} 
-              className="relative h-80 rounded-3xl overflow-hidden group bg-[#350529] border border-[#e9a2a3]/20 shadow-lg cursor-pointer"
+              className="relative h-80 rounded-3xl overflow-hidden group bg-[#350529] border border-[#e9a2a3]/20 shadow-lg cursor-pointer transform hover:-translate-y-1 transition-all duration-300"
             >
               <img 
                 src={item.src} 
@@ -357,9 +403,43 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Animated FAQ Section */}
+      <section id="faq" className="py-24 bg-[#350529] px-6 border-t border-[#e9a2a3]/20">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12 scroll-reveal opacity-0 translate-y-12 transition-all duration-700">
+            <span className="text-xs font-bold text-[#e9a2a3] uppercase tracking-widest">Common Questions</span>
+            <h2 className="text-3xl sm:text-4xl font-black text-white mt-2">Frequently Asked</h2>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, idx) => (
+              <div 
+                key={idx} 
+                className="bg-[#400733] rounded-2xl border border-[#e9a2a3]/20 overflow-hidden transition-all duration-300"
+              >
+                <button 
+                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                  className="w-full px-6 py-5 text-left flex items-center justify-between font-bold text-sm text-white hover:text-[#e9a2a3] transition"
+                >
+                  <span>{faq.q}</span>
+                  <span className={`text-[#e9a2a3] text-xl transition-transform duration-300 ${openFaq === idx ? 'rotate-45' : ''}`}>
+                    +
+                  </span>
+                </button>
+                {openFaq === idx && (
+                  <div className="px-6 pb-5 text-xs text-rose-100/80 leading-relaxed animate-fadeIn">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Booking Form */}
       <section id="contact" className="py-28 bg-[#37062c] px-6 border-t border-[#e9a2a3]/20 relative">
-        <div className="max-w-3xl mx-auto scroll-reveal opacity-0 translate-y-10 transition-all duration-700">
+        <div className="max-w-3xl mx-auto scroll-reveal opacity-0 translate-y-12 transition-all duration-700">
           <div className="text-center mb-14">
             <span className="text-[#e9a2a3] text-xs font-black uppercase tracking-widest">Connect With Our Team</span>
             <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Ready to Raise a Toast?</h2>
@@ -440,7 +520,7 @@ export default function Home() {
 
             <button 
               type="submit" 
-              className="w-full bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-black uppercase tracking-wider py-4 rounded-xl transition-all duration-300 shadow-[0_0_25px_rgba(233,162,163,0.3)] hover:shadow-[0_0_35px_rgba(233,162,163,0.5)] hover:-translate-y-0.5"
+              className="w-full bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-black uppercase tracking-wider py-4 rounded-xl transition-all duration-300 shadow-[0_0_25px_rgba(233,162,163,0.3)] hover:shadow-[0_0_35px_rgba(233,162,163,0.6)] hover:-translate-y-0.5"
             >
               Send Inquiry via WhatsApp
             </button>
@@ -485,7 +565,7 @@ export default function Home() {
 
       {/* Cookie Consent Banner */}
       {showCookie && (
-        <div className="fixed bottom-6 left-6 z-50 max-w-sm bg-[#350529]/95 border border-[#e9a2a3]/40 p-5 rounded-2xl shadow-2xl backdrop-blur-md animate-fade-in">
+        <div className="fixed bottom-6 left-6 z-50 max-w-sm bg-[#350529]/95 border border-[#e9a2a3]/40 p-5 rounded-2xl shadow-2xl backdrop-blur-md">
           <p className="text-xs text-rose-100/90 leading-relaxed mb-3">
             We use cookies to analyze web traffic and deliver a personalized celebration planning journey.
           </p>
