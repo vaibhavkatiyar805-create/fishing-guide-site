@@ -3,13 +3,8 @@
 import React, { useState, useEffect } from 'react'
 
 export default function Home() {
-  // Gallery Filter State
   const [activeTab, setActiveTab] = useState<'all' | 'weddings' | 'parties' | 'decor'>('all')
-
-  // Cookie Banner State
   const [showCookie, setShowCookie] = useState(false)
-
-  // Booking Form State
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -22,15 +17,41 @@ export default function Home() {
 
   useEffect(() => {
     const consent = localStorage.getItem('ttt_cookie_consent')
-    if (!consent) {
-      setShowCookie(true)
-    }
+    if (!consent) setShowCookie(true)
+
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('opacity-100', 'translate-y-0')
+            entry.target.classList.remove('opacity-0', 'translate-y-10')
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+
+    const hiddenElements = document.querySelectorAll('.scroll-reveal')
+    hiddenElements.forEach((el) => observer.observe(el))
+
+    return () => observer.disconnect()
   }, [])
 
   const acceptCookies = () => {
     localStorage.setItem('ttt_cookie_consent', 'accepted')
     setShowCookie(false)
   }
+
+  const marqueePhotos = [
+    'https://images.unsplash.com/photo-1519741497674-611481863552?w=500&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=500&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=500&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=500&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=500&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500&auto=format&fit=crop&q=80',
+  ]
 
   const galleryItems = [
     {
@@ -77,218 +98,225 @@ export default function Home() {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // WhatsApp format message
-    const waText = `Hi Task to Toast Events! I'd like to plan an event:%0A• Name: ${formData.name}%0A• Phone: ${formData.phone}%0A• Type: ${formData.eventType}%0A• Date: ${formData.date}%0A• Guests: ${formData.guestCount}%0A• Details: ${formData.message}`
+    const waText = `Hi Task to Toast Events! I want to plan an event:%0A• Name: ${formData.name}%0A• Phone: ${formData.phone}%0A• Type: ${formData.eventType}%0A• Date: ${formData.date}%0A• Guests: ${formData.guestCount}%0A• Details: ${formData.message}`
     window.open(`https://wa.me/919999999999?text=${waText}`, '_blank')
     setIsSubmitted(true)
   }
 
   return (
-    <div className="bg-[#400733] text-white selection:bg-[#e9a2a3] selection:text-[#400733] min-h-screen font-sans scroll-smooth">
+    <div className="bg-[#400733] text-white selection:bg-[#e9a2a3] selection:text-[#400733] min-h-screen font-sans scroll-smooth overflow-x-hidden relative">
       
-      {/* Top Floating Glass Header */}
-      <header className="sticky top-0 z-40 bg-[#400733]/85 backdrop-blur-md border-b border-[#e9a2a3]/20 transition-all">
+      {/* Background Radial Glow Blobs */}
+      <div className="fixed top-[-100px] left-[-100px] w-[500px] h-[500px] bg-[#e9a2a3]/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse"></div>
+      <div className="fixed bottom-[-150px] right-[-100px] w-[600px] h-[600px] bg-[#e9a2a3]/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+
+      {/* Floating Glass Header */}
+      <header className="sticky top-0 z-40 bg-[#400733]/85 backdrop-blur-xl border-b border-[#e9a2a3]/20 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <a href="#" className="flex items-center gap-3">
-            <span className="w-4 h-4 rounded-full bg-[#e9a2a3] shadow-[0_0_12px_#e9a2a3]"></span>
-            <span className="text-2xl font-black tracking-wider text-[#e9a2a3] uppercase drop-shadow-sm">
+          <a href="#" className="flex items-center gap-3 group">
+            <span className="w-3.5 h-3.5 rounded-full bg-[#e9a2a3] shadow-[0_0_15px_#e9a2a3] group-hover:scale-125 transition-transform duration-300"></span>
+            <span className="text-xl sm:text-2xl font-black tracking-wider text-[#e9a2a3] uppercase transition-all duration-300 group-hover:tracking-widest">
               Task to Toast
             </span>
           </a>
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold tracking-wide text-rose-100/80">
-            <a href="#about" className="hover:text-[#e9a2a3] transition">About</a>
-            <a href="#services" className="hover:text-[#e9a2a3] transition">Services</a>
-            <a href="#gallery" className="hover:text-[#e9a2a3] transition">Portfolio</a>
-            <a href="#contact" className="hover:text-[#e9a2a3] transition">Inquire</a>
+            <a href="#about" className="hover:text-[#e9a2a3] transition-colors duration-200">About</a>
+            <a href="#services" className="hover:text-[#e9a2a3] transition-colors duration-200">Services</a>
+            <a href="#gallery" className="hover:text-[#e9a2a3] transition-colors duration-200">Portfolio</a>
+            <a href="#contact" className="hover:text-[#e9a2a3] transition-colors duration-200">Inquire</a>
           </nav>
           <a 
             href="#contact" 
-            className="bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-bold text-xs uppercase tracking-widest px-5 py-2.5 rounded-full shadow-lg transition-transform duration-300 hover:scale-105"
+            className="relative inline-flex items-center justify-center p-0.5 overflow-hidden rounded-full group"
           >
-            Plan Your Event
+            <span className="w-full h-full bg-gradient-to-br from-[#e9a2a3] to-[#801066] absolute"></span>
+            <span className="relative px-6 py-2.5 transition-all ease-out bg-[#400733] rounded-full group-hover:bg-opacity-0 font-bold text-xs uppercase tracking-widest text-[#e9a2a3] group-hover:text-white">
+              Plan Event
+            </span>
           </a>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center text-center px-6 overflow-hidden">
+      <section className="relative min-h-[92vh] flex items-center justify-center text-center px-6 overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-25 scale-105 transition-transform duration-1000"
+          className="absolute inset-0 bg-cover bg-center opacity-20 scale-105 animate-[pulse_8s_ease-in-out_infinite]"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1600&auto=format&fit=crop&q=80')" }}
         ></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#400733] via-[#400733]/70 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#400733]/90 via-[#400733]/70 to-[#400733]"></div>
 
         <div className="relative max-w-4xl mx-auto py-24 z-10">
-          <span className="inline-block py-1.5 px-5 rounded-full bg-[#e9a2a3]/15 text-[#e9a2a3] text-xs font-bold tracking-widest uppercase mb-6 border border-[#e9a2a3]/30 backdrop-blur-md">
-            Premier Event Curators & Designers
-          </span>
+          <div className="inline-flex items-center gap-2 py-1.5 px-5 rounded-full bg-[#e9a2a3]/10 text-[#e9a2a3] text-xs font-bold tracking-widest uppercase mb-8 border border-[#e9a2a3]/30 backdrop-blur-md shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[#e9a2a3] animate-ping"></span>
+            Premier Luxury Event Curators
+          </div>
+          
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.1] text-white">
             From First Concept <br />
-            <span className="text-[#e9a2a3] italic font-serif">To Final Toast</span>
+            <span className="text-[#e9a2a3] italic font-serif relative inline-block">
+              To Final Toast
+              <span className="absolute bottom-2 left-0 w-full h-[3px] bg-[#e9a2a3]/40 rounded-full"></span>
+            </span>
           </h1>
-          <p className="mt-6 text-lg sm:text-xl text-rose-100/90 max-w-2xl mx-auto font-light leading-relaxed">
-            Curating luxury weddings, landmark milestone celebrations, and high-vibe private soirees with effortless elegance.
+
+          <p className="mt-8 text-lg sm:text-xl text-rose-100/90 max-w-2xl mx-auto font-light leading-relaxed">
+            Curating bespoke weddings, milestone anniversaries, and high-vibe celebrations crafted to absolute perfection.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
             <a 
               href="#contact" 
-              className="w-full sm:w-auto bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-black text-sm uppercase tracking-wider px-8 py-4 rounded-full shadow-xl shadow-[#e9a2a3]/20 transition-all duration-300 hover:-translate-y-1"
+              className="w-full sm:w-auto bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-black text-sm uppercase tracking-wider px-9 py-4 rounded-full shadow-[0_0_30px_rgba(233,162,163,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(233,162,163,0.6)]"
             >
-              Get Free Estimate
+              Get Free Consultation
             </a>
             <a 
               href="#gallery" 
-              className="w-full sm:w-auto border border-[#e9a2a3]/40 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-300 backdrop-blur-sm"
+              className="w-full sm:w-auto border border-[#e9a2a3]/40 hover:border-[#e9a2a3] bg-white/5 hover:bg-[#e9a2a3]/10 text-white font-semibold text-sm uppercase tracking-wider px-9 py-4 rounded-full transition-all duration-300 backdrop-blur-md hover:-translate-y-0.5"
             >
-              View Our Work
+              Explore Portfolio
             </a>
           </div>
         </div>
       </section>
 
+      {/* Infinite Auto-Scrolling Photo Marquee */}
+      <section className="py-6 border-y border-[#e9a2a3]/20 bg-[#350529] overflow-hidden whitespace-nowrap relative">
+        <div className="inline-flex gap-6 animate-[marquee_25s_linear_infinite] hover:[animation-play-state:paused]">
+          {[...marqueePhotos, ...marqueePhotos].map((photo, i) => (
+            <div key={i} className="w-56 h-36 rounded-2xl overflow-hidden shrink-0 border border-[#e9a2a3]/30 shadow-md">
+              <img src={photo} alt="Event highlight" className="w-full h-full object-cover hover:scale-110 transition duration-500" />
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Live Stats Bar */}
-      <section className="border-y border-[#e9a2a3]/20 bg-[#350529]">
-        <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div>
+      <section className="bg-[#350529]/60 border-b border-[#e9a2a3]/20 py-12">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center scroll-reveal opacity-0 translate-y-10 transition-all duration-700">
+          <div className="p-4 rounded-2xl hover:bg-white/5 transition duration-300">
             <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3]">50+</p>
-            <p className="text-xs uppercase tracking-wider text-rose-200/70 mt-1">Events Curated</p>
+            <p className="text-xs uppercase tracking-widest text-rose-200/70 mt-2">Events Curated</p>
           </div>
-          <div>
+          <div className="p-4 rounded-2xl hover:bg-white/5 transition duration-300">
             <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3]">100%</p>
-            <p className="text-xs uppercase tracking-wider text-rose-200/70 mt-1">On-Time Execution</p>
+            <p className="text-xs uppercase tracking-widest text-rose-200/70 mt-2">On-Time Execution</p>
           </div>
-          <div>
-            <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3]">1000+</p>
-            <p className="text-xs uppercase tracking-wider text-rose-200/70 mt-1">Smiles & Toasts</p>
+          <div className="p-4 rounded-2xl hover:bg-white/5 transition duration-300">
+            <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3]">1,500+</p>
+            <p className="text-xs uppercase tracking-widest text-rose-200/70 mt-2">Happy Guests</p>
           </div>
-          <div>
+          <div className="p-4 rounded-2xl hover:bg-white/5 transition duration-300">
             <p className="text-4xl sm:text-5xl font-extrabold text-[#e9a2a3]">5.0 ★</p>
-            <p className="text-xs uppercase tracking-wider text-rose-200/70 mt-1">Client Reviews</p>
+            <p className="text-xs uppercase tracking-widest text-rose-200/70 mt-2">Client Reviews</p>
           </div>
         </div>
       </section>
 
       {/* Why Choose Us */}
-      <section id="about" className="py-24 px-6 max-w-6xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Why Host With Us</h2>
-          <p className="mt-3 text-rose-200/70 text-base">You enjoy the spotlight; we run the stage.</p>
+      <section id="about" className="py-28 px-6 max-w-6xl mx-auto">
+        <div className="text-center max-w-2xl mx-auto mb-16 scroll-reveal opacity-0 translate-y-10 transition-all duration-700">
+          <span className="text-xs font-bold text-[#e9a2a3] uppercase tracking-widest">Why Task to Toast</span>
+          <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Your Vision. Flawless Reality.</h2>
+          <p className="mt-4 text-rose-200/70 text-base">You enjoy the spotlight; we run the entire stage behind the scenes.</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-[#4d093d] p-8 rounded-3xl border border-[#e9a2a3]/20 hover:border-[#e9a2a3]/50 transition-all duration-300 hover:-translate-y-2">
-            <span className="text-3xl font-black text-[#e9a2a3] block mb-4">01</span>
-            <h3 className="text-xl font-bold text-white mb-3">Signature Aesthetics</h3>
-            <p className="text-rose-100/80 text-sm leading-relaxed">
-              No cookie-cutter stages. Every floral arrangement, lighting hue, and table placement is tailored around your taste.
-            </p>
-          </div>
-          <div className="bg-[#4d093d] p-8 rounded-3xl border border-[#e9a2a3]/20 hover:border-[#e9a2a3]/50 transition-all duration-300 hover:-translate-y-2">
-            <span className="text-3xl font-black text-[#e9a2a3] block mb-4">02</span>
-            <h3 className="text-xl font-bold text-white mb-3">Seamless Vendor Control</h3>
-            <p className="text-rose-100/80 text-sm leading-relaxed">
-              Catering, sound, artists, photography, and hospitality—we orchestrate every partner under a single tight itinerary.
-            </p>
-          </div>
-          <div className="bg-[#4d093d] p-8 rounded-3xl border border-[#e9a2a3]/20 hover:border-[#e9a2a3]/50 transition-all duration-300 hover:-translate-y-2">
-            <span className="text-3xl font-black text-[#e9a2a3] block mb-4">03</span>
-            <h3 className="text-xl font-bold text-white mb-3">Unrivaled Hospitality</h3>
-            <p className="text-rose-100/80 text-sm leading-relaxed">
-              From the moment guests arrive to the final goodbyes, your guests will experience smooth, warm, and elite hosting.
-            </p>
-          </div>
+          {[
+            {
+              num: '01',
+              title: 'Bespoke Concepts',
+              desc: 'No repetitive templates. From bespoke floral palettes to custom ambient lighting setups, every corner reflects your story.'
+            },
+            {
+              num: '02',
+              title: 'Master Itinerary & Vendors',
+              desc: 'Coordination across sound engineers, culinary masters, photographers, and performers under a minute-to-minute run sheet.'
+            },
+            {
+              num: '03',
+              title: 'Effortless Hosting',
+              desc: 'From guest reception to final send-offs, our team provides discreet, polished, and warm five-star hospitality.'
+            }
+          ].map((item, idx) => (
+            <div 
+              key={idx}
+              className="scroll-reveal opacity-0 translate-y-10 transition-all duration-700 bg-[#4d093d]/50 p-8 rounded-3xl border border-[#e9a2a3]/20 hover:border-[#e9a2a3] hover:shadow-[0_10px_35px_rgba(233,162,163,0.15)] hover:-translate-y-2 duration-300 backdrop-blur-sm group"
+            >
+              <span className="text-4xl font-black text-[#e9a2a3]/80 group-hover:text-[#e9a2a3] transition-colors block mb-4">{item.num}</span>
+              <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
+              <p className="text-rose-100/80 text-sm leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-24 bg-[#37062c] px-6 border-y border-[#e9a2a3]/20">
+      <section id="services" className="py-28 bg-[#37062c] px-6 border-y border-[#e9a2a3]/20 relative">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Curated Packages</h2>
-            <p className="mt-3 text-rose-200/70 text-base">Comprehensive event production tailored to your scale</p>
+          <div className="text-center max-w-2xl mx-auto mb-16 scroll-reveal opacity-0 translate-y-10 transition-all duration-700">
+            <span className="text-xs font-bold text-[#e9a2a3] uppercase tracking-widest">Our Expertise</span>
+            <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Curated Productions</h2>
+            <p className="mt-4 text-rose-200/70 text-base">Comprehensive event curation tailored to any scale</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-[#400733] rounded-3xl overflow-hidden border border-[#e9a2a3]/20 flex flex-col group hover:shadow-2xl transition-all">
-              <div className="h-60 overflow-hidden relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=400&fit=crop" 
-                  alt="Weddings" 
-                  className="w-full h-full object-cover group-hover:scale-110 transition duration-700" 
-                />
-                <span className="absolute top-4 right-4 bg-[#400733]/90 text-[#e9a2a3] font-bold text-xs px-3 py-1.5 rounded-full border border-[#e9a2a3]/40">
-                  Full Production
-                </span>
-              </div>
-              <div className="p-8 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Weddings & Sangeet</h3>
-                  <p className="text-rose-100/80 text-sm leading-relaxed mb-6">
-                    Grand entrances, regal mandap architecture, curated artist bookings, and bridal coordination.
-                  </p>
+            {[
+              {
+                title: 'Weddings & Sangeet',
+                tag: 'Full Production',
+                desc: 'Breathtaking mandaps, dramatic grand entries, artist curation, and end-to-end guest hospitality.',
+                img: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=400&fit=crop'
+              },
+              {
+                title: 'Parties & Cocktails',
+                tag: 'Turnkey Vibe',
+                desc: 'Stylized cocktail soirees, milestone birthdays, personalized bar design, and dynamic DJ setups.',
+                img: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&h=400&fit=crop'
+              },
+              {
+                title: 'Corporate Galas',
+                tag: 'Elite Standard',
+                desc: 'Annual award nights, brand launches, and executive dinners designed with crisp precision.',
+                img: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&h=400&fit=crop'
+              }
+            ].map((srv, idx) => (
+              <div 
+                key={idx}
+                className="scroll-reveal opacity-0 translate-y-10 transition-all duration-700 bg-[#400733] rounded-3xl overflow-hidden border border-[#e9a2a3]/20 hover:border-[#e9a2a3]/60 hover:shadow-[0_15px_40px_rgba(233,162,163,0.2)] hover:-translate-y-2 flex flex-col group duration-500"
+              >
+                <div className="h-64 overflow-hidden relative">
+                  <img 
+                    src={srv.img} 
+                    alt={srv.title} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#400733] via-transparent to-transparent opacity-80"></div>
+                  <span className="absolute top-4 right-4 bg-[#400733]/90 backdrop-blur-md text-[#e9a2a3] font-bold text-xs px-3 py-1.5 rounded-full border border-[#e9a2a3]/40">
+                    {srv.tag}
+                  </span>
                 </div>
-                <a href="#contact" className="text-[#e9a2a3] font-bold text-sm hover:underline">
-                  Inquire Package &rarr;
-                </a>
-              </div>
-            </div>
-
-            <div className="bg-[#400733] rounded-3xl overflow-hidden border border-[#e9a2a3]/20 flex flex-col group hover:shadow-2xl transition-all">
-              <div className="h-60 overflow-hidden relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&h=400&fit=crop" 
-                  alt="Private Parties" 
-                  className="w-full h-full object-cover group-hover:scale-110 transition duration-700" 
-                />
-                <span className="absolute top-4 right-4 bg-[#400733]/90 text-[#e9a2a3] font-bold text-xs px-3 py-1.5 rounded-full border border-[#e9a2a3]/40">
-                  Turnkey Vibe
-                </span>
-              </div>
-              <div className="p-8 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Milestones & Birthdays</h3>
-                  <p className="text-rose-100/80 text-sm leading-relaxed mb-6">
-                    Themed indoor/outdoor cocktail evenings, custom photo booths, dynamic sound, and lighting.
-                  </p>
+                <div className="p-8 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">{srv.title}</h3>
+                    <p className="text-rose-100/80 text-sm leading-relaxed mb-6">{srv.desc}</p>
+                  </div>
+                  <a href="#contact" className="text-[#e9a2a3] font-bold text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                    Inquire Package <span>&rarr;</span>
+                  </a>
                 </div>
-                <a href="#contact" className="text-[#e9a2a3] font-bold text-sm hover:underline">
-                  Inquire Package &rarr;
-                </a>
               </div>
-            </div>
-
-            <div className="bg-[#400733] rounded-3xl overflow-hidden border border-[#e9a2a3]/20 flex flex-col group hover:shadow-2xl transition-all">
-              <div className="h-60 overflow-hidden relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&h=400&fit=crop" 
-                  alt="Corporate Gala" 
-                  className="w-full h-full object-cover group-hover:scale-110 transition duration-700" 
-                />
-                <span className="absolute top-4 right-4 bg-[#400733]/90 text-[#e9a2a3] font-bold text-xs px-3 py-1.5 rounded-full border border-[#e9a2a3]/40">
-                  Elite Standard
-                </span>
-              </div>
-              <div className="p-8 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Corporate Galas & Dinners</h3>
-                  <p className="text-rose-100/80 text-sm leading-relaxed mb-6">
-                    Posh conferences, annual awards nights, and celebratory corporate toasts handled with precision.
-                  </p>
-                </div>
-                <a href="#contact" className="text-[#e9a2a3] font-bold text-sm hover:underline">
-                  Inquire Package &rarr;
-                </a>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Portfolio Gallery with Filter Tabs */}
-      <section id="gallery" className="py-24 px-6 max-w-6xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Event Showcase</h2>
-          <p className="mt-3 text-rose-200/70 text-base">Unfiltered glimpses of the magic we have brought to life</p>
+      <section id="gallery" className="py-28 px-6 max-w-6xl mx-auto">
+        <div className="text-center max-w-2xl mx-auto mb-14 scroll-reveal opacity-0 translate-y-10 transition-all duration-700">
+          <span className="text-xs font-bold text-[#e9a2a3] uppercase tracking-widest">Visual Portfolio</span>
+          <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Moments from the Archive</h2>
+          <p className="mt-4 text-rose-200/70 text-base">Unfiltered glimpses of the toasts we have crafted</p>
           
           {/* Tabs */}
           <div className="flex flex-wrap justify-center gap-2 mt-8">
@@ -296,10 +324,10 @@ export default function Home() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+                className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
                   activeTab === tab 
-                    ? 'bg-[#e9a2a3] text-[#400733] shadow-md shadow-[#e9a2a3]/30 scale-105' 
-                    : 'bg-[#4d093d] text-rose-200 hover:bg-[#5b0c49]'
+                    ? 'bg-[#e9a2a3] text-[#400733] shadow-[0_0_20px_#e9a2a3] scale-105' 
+                    : 'bg-[#4d093d] text-rose-200 hover:bg-[#5e0d4c] hover:text-white'
                 }`}
               >
                 {tab}
@@ -312,117 +340,118 @@ export default function Home() {
           {filteredGallery.map((item) => (
             <div 
               key={item.id} 
-              className="relative h-80 rounded-3xl overflow-hidden group bg-[#350529] border border-[#e9a2a3]/20 shadow-md"
+              className="relative h-80 rounded-3xl overflow-hidden group bg-[#350529] border border-[#e9a2a3]/20 shadow-lg cursor-pointer"
             >
               <img 
                 src={item.src} 
                 alt={item.title} 
                 className="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" 
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#400733] via-transparent opacity-0 group-hover:opacity-90 transition-opacity duration-300 flex items-end p-6">
-                <p className="text-sm font-bold text-[#e9a2a3]">{item.title}</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#400733] via-[#400733]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                <p className="text-base font-bold text-[#e9a2a3] transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                  {item.title}
+                </p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Interactive Booking & Inquiries Form */}
-      <section id="contact" className="py-24 bg-[#37062c] px-6 border-t border-[#e9a2a3]/20">
-        <div className="max-w-4xl mx-auto">
+      {/* Booking Form */}
+      <section id="contact" className="py-28 bg-[#37062c] px-6 border-t border-[#e9a2a3]/20 relative">
+        <div className="max-w-3xl mx-auto scroll-reveal opacity-0 translate-y-10 transition-all duration-700">
           <div className="text-center mb-14">
-            <span className="text-[#e9a2a3] text-xs font-black uppercase tracking-widest">Let's Connect</span>
-            <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Ready for the Toast?</h2>
-            <p className="text-rose-200/70 text-sm mt-3">Share your vision and our planning director will reach out within 24 hours.</p>
+            <span className="text-[#e9a2a3] text-xs font-black uppercase tracking-widest">Connect With Our Team</span>
+            <h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Ready to Raise a Toast?</h2>
+            <p className="text-rose-200/70 text-sm mt-3">Share your vision and our planning director will connect directly on WhatsApp.</p>
           </div>
 
-          <form onSubmit={handleFormSubmit} className="bg-[#400733] p-8 sm:p-12 rounded-3xl border border-[#e9a2a3]/30 shadow-2xl space-y-6">
+          <form onSubmit={handleFormSubmit} className="bg-[#400733]/90 backdrop-blur-md p-8 sm:p-12 rounded-3xl border border-[#e9a2a3]/30 shadow-2xl space-y-6">
             <div className="grid sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2">Your Name</label>
+                <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2 tracking-wider">Your Name</label>
                 <input 
                   type="text" 
                   required
                   placeholder="e.g. Rohini Sharma"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3 text-white placeholder-rose-200/30 focus:outline-none focus:border-[#e9a2a3]"
+                  className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3.5 text-white placeholder-rose-200/30 focus:outline-none focus:border-[#e9a2a3] transition"
                 />
               </div>
               <div>
-                <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2">WhatsApp / Phone</label>
+                <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2 tracking-wider">WhatsApp / Phone</label>
                 <input 
                   type="tel" 
                   required
                   placeholder="+91 98765 43210"
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3 text-white placeholder-rose-200/30 focus:outline-none focus:border-[#e9a2a3]"
+                  className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3.5 text-white placeholder-rose-200/30 focus:outline-none focus:border-[#e9a2a3] transition"
                 />
               </div>
             </div>
 
             <div className="grid sm:grid-cols-3 gap-6">
               <div>
-                <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2">Event Type</label>
+                <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2 tracking-wider">Event Type</label>
                 <select 
                   value={formData.eventType}
                   onChange={(e) => setFormData({...formData, eventType: e.target.value})}
-                  className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#e9a2a3]"
+                  className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-[#e9a2a3] transition"
                 >
                   <option value="Wedding">Wedding / Sangeet</option>
                   <option value="Birthday">Milestone Birthday</option>
-                  <option value="Cocktail">Cocktail / Private Party</option>
+                  <option value="Cocktail">Cocktail Soiree</option>
                   <option value="Corporate">Corporate Gala</option>
                 </select>
               </div>
               <div>
-                <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2">Tentative Date</label>
+                <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2 tracking-wider">Tentative Date</label>
                 <input 
                   type="date" 
                   value={formData.date}
                   onChange={(e) => setFormData({...formData, date: e.target.value})}
-                  className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#e9a2a3]"
+                  className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-[#e9a2a3] transition"
                 />
               </div>
               <div>
-                <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2">Est. Guests</label>
+                <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2 tracking-wider">Est. Guests</label>
                 <input 
                   type="text" 
                   placeholder="e.g. 150-200"
                   value={formData.guestCount}
                   onChange={(e) => setFormData({...formData, guestCount: e.target.value})}
-                  className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3 text-white placeholder-rose-200/30 focus:outline-none focus:border-[#e9a2a3]"
+                  className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3.5 text-white placeholder-rose-200/30 focus:outline-none focus:border-[#e9a2a3] transition"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2">Brief Vision / Requirements</label>
+              <label className="block text-xs uppercase font-bold text-[#e9a2a3] mb-2 tracking-wider">Brief Vision</label>
               <textarea 
                 rows={3} 
-                placeholder="Tell us about the venue, vibe, or special requests..."
+                placeholder="Tell us about the dream venue, vibe, or themes..."
                 value={formData.message}
                 onChange={(e) => setFormData({...formData, message: e.target.value})}
-                className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3 text-white placeholder-rose-200/30 focus:outline-none focus:border-[#e9a2a3]"
+                className="w-full bg-[#350529] border border-[#e9a2a3]/30 rounded-xl px-4 py-3.5 text-white placeholder-rose-200/30 focus:outline-none focus:border-[#e9a2a3] transition"
               ></textarea>
             </div>
 
             <button 
               type="submit" 
-              className="w-full bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-black uppercase tracking-wider py-4 rounded-xl transition duration-300 shadow-xl hover:shadow-[#e9a2a3]/30"
+              className="w-full bg-[#e9a2a3] hover:bg-[#e38c8e] text-[#400733] font-black uppercase tracking-wider py-4 rounded-xl transition-all duration-300 shadow-[0_0_25px_rgba(233,162,163,0.3)] hover:shadow-[0_0_35px_rgba(233,162,163,0.5)] hover:-translate-y-0.5"
             >
               Send Inquiry via WhatsApp
             </button>
 
             {isSubmitted && (
-              <p className="text-center text-xs text-[#e9a2a3] font-semibold mt-2">
-                Inquiry redirected to WhatsApp! We will connect with you shortly.
+              <p className="text-center text-xs text-[#e9a2a3] font-semibold mt-2 animate-bounce">
+                Redirecting to WhatsApp with your details...
               </p>
             )}
           </form>
 
-          {/* Social Follow */}
           <div className="mt-12 text-center">
             <a 
               href="https://www.instagram.com/task.to.toast.events/" 
@@ -441,12 +470,12 @@ export default function Home() {
         <p>© 2026 Task to Toast Events. All rights reserved.</p>
       </footer>
 
-      {/* Floating WhatsApp Quick Action Button */}
+      {/* Floating WhatsApp Action Button */}
       <a 
         href="https://wa.me/919999999999?text=Hi%20Task%20to%20Toast%2C%20I%20want%20to%20inquire%20about%20event%20planning."
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 flex items-center justify-center group"
+        className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-[0_0_25px_rgba(37,211,102,0.5)] hover:scale-110 transition-transform duration-300 flex items-center justify-center animate-bounce"
         aria-label="Chat on WhatsApp"
       >
         <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
@@ -456,9 +485,9 @@ export default function Home() {
 
       {/* Cookie Consent Banner */}
       {showCookie && (
-        <div className="fixed bottom-6 left-6 z-50 max-w-sm bg-[#350529]/95 border border-[#e9a2a3]/40 p-5 rounded-2xl shadow-2xl backdrop-blur-md">
+        <div className="fixed bottom-6 left-6 z-50 max-w-sm bg-[#350529]/95 border border-[#e9a2a3]/40 p-5 rounded-2xl shadow-2xl backdrop-blur-md animate-fade-in">
           <p className="text-xs text-rose-100/90 leading-relaxed mb-3">
-            We use cookies to measure site visits and deliver an optimal celebration-planning experience.
+            We use cookies to analyze web traffic and deliver a personalized celebration planning journey.
           </p>
           <div className="flex gap-2">
             <button 
@@ -471,7 +500,7 @@ export default function Home() {
               onClick={() => setShowCookie(false)}
               className="border border-[#e9a2a3]/30 text-rose-200 text-xs px-3 py-2 rounded-lg hover:bg-white/5 transition"
             >
-              Close
+              Decline
             </button>
           </div>
         </div>
