@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Task to Toast Events | Luxury Event Curators',
@@ -14,9 +13,17 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* Tailwind CDN */}
+        {/* Tailwind CSS CDN */}
         <script src="https://cdn.tailwindcss.com"></script>
         
+        {/* Marquee Animation Inline */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+          }
+        `}} />
+
         {/* Google Analytics GA4 */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-DKNHWKK40E"></script>
         <script
